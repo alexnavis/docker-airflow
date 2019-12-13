@@ -16,6 +16,7 @@ ARG AIRFLOW_VERSION=1.10.6
 ARG AIRFLOW_USER_HOME=/usr/local/airflow
 ARG AIRFLOW_DEPS=""
 ARG PYTHON_DEPS=""
+ARG DOCKER_UID="1234"
 ENV AIRFLOW_HOME=${AIRFLOW_USER_HOME}
 
 # Define en_US.
@@ -51,6 +52,8 @@ RUN set -ex \
     && locale-gen \
     && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
     && useradd -ms /bin/bash -d ${AIRFLOW_USER_HOME} airflow \
+    && usermod -u ${DOCKER_UID} airflow \
+    && echo "Set airflow's uid to ${DOCKER_UID}" \
     && pip install -U pip setuptools wheel \
     && pip install pytz \
     && pip install pyOpenSSL \
